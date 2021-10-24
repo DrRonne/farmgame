@@ -1,0 +1,6 @@
+[submodule "courtyard"]
+	path = courtyard
+	url = git@github.com:DrRonne/courtyard.git
+[submodule "stable"]
+	path = stable
+	url = git@github.com:DrRonne/stable.git
