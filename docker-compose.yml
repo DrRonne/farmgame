@@ -1,0 +1,38 @@
+version: "3.8"
+services:
+  courtyard:
+    build: './courtyard'
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  stable:
+    build: ./stable
+    ports:
+      - "5000:5000"
+  barn:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_DATABASE: 'Users'
+      MYSQL_USER: 'outsideaccess'
+      MYSQL_PASSWORD: 'db_pw_123'
+      MYSQL_ROOT_PASSWORD: 'db_pw_123'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
+    volumes:
+      - mariadb-data:/var/lib/barn
+  myadmin:
+    image: phpmyadmin
+    environment:
+      PMA_HOST: Users
+      PMA_USER: root
+      PMA_PASSWORD: db_pw_123
+    ports:
+      - "8080:80"
+volumes:
+  mariadb-data:
+    driver: local
