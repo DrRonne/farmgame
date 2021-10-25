@@ -24,15 +24,26 @@ services:
     expose:
       - '3306'
     volumes:
-      - mariadb-data:/var/lib/barn
+      - mysql:/var/lib/mysql
+  guard-dog:
+    image: "redis:alpine"
+    command: redis-server --requirepass account_access_123
+    ports:
+      - "6379:6379"
+    volumes:
+      - $PWD/redis-data:/var/lib/redis
+      - $PWD/redis.conf:/usr/local/etc/redis/redis.conf
+    environment:
+     - REDIS_REPLICATION_MODE=master
   myadmin:
     image: phpmyadmin
     environment:
-      PMA_HOST: Users
+      PMA_HOST: barn
       PMA_USER: root
       PMA_PASSWORD: db_pw_123
     ports:
       - "8080:80"
+    depends_on:
+      - barn
 volumes:
-  mariadb-data:
-    driver: local
+  mysql:
